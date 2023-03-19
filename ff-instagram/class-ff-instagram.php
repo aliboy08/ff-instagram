@@ -228,7 +228,7 @@ class FF_Instagram {
         foreach( $q as $post_id ) {
             $data[] = [
                 'post_id' => $post_id,
-                'image' => get_the_post_thumbnail_url( $post_id, $image_size ),
+                'image_url' => get_the_post_thumbnail_url( $post_id, $image_size ),
                 'type' => get_post_meta( $post_id, 'type', true ),
                 'link' => get_post_meta( $post_id, 'link', true ),
             ];

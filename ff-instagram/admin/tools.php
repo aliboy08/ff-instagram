@@ -111,7 +111,7 @@ if( !$num ) $num = 15;
             $instagram_feed = FF_Instagram::get_items();
             if( $instagram_feed ) {
                 foreach( $instagram_feed as $item ) {
-                    echo '<div style="display:inline-block; width: 100px; height: 100px; margin: 5px; background-color: #eee;"><img src="'. $item['image'] .'" width="100"></div>';
+                    echo '<div style="display:inline-block; width: 100px; height: 100px; margin: 5px; background-color: #eee;"><img src="'. $item['image_url'] .'" width="100"></div>';
                 }
             }
             ?>

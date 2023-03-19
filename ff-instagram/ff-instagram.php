@@ -3,7 +3,7 @@
  * Plugin Name: FF Instagram
  * Plugin URI: https://www.fivebyfive.com.au/
  * Description: Instagram feed
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: Five by Five
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
