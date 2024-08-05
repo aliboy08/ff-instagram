@@ -1,9 +1,7 @@
 <?php
 namespace EspressoDev\InstagramBasicDisplay;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	die();
-}
+if ( ! defined( 'ABSPATH' ) ) die();
 
 class InstagramBasicDisplay
 {
