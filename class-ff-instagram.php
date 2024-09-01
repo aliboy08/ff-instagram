@@ -51,11 +51,8 @@ class FF_Instagram {
         
         $this->instagram_feed = $this->fetch_data();
 
-        if( !$this->instagram_feed ) return;
-
         if( isset( $this->instagram_feed->error ) ) {
-        	pre_debug( 'INSTAGRAM FEED: '. $this->instagram_feed->error->message );
-        	return;
+        	return $this->instagram_feed->error->message;
         }
 
         // fix for some images missing

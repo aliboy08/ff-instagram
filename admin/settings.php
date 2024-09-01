@@ -21,8 +21,13 @@ $ff_instagram = FF_Instagram::getInstance();
 
 // Refresh Feed
 if( $action == 'refresh-feed' ) {
-    $ff_instagram->refresh_feed();
-    wp_redirect( $refresh_url );
+    $error = $ff_instagram->refresh_feed();
+    if( $error ) {
+        pre_debug('ERROR: '. $error);
+    }
+    else {
+        wp_redirect( $refresh_url );
+    }
 }
 
 // Refresh Access Token
