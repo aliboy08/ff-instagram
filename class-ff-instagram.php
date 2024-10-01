@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) die();
 class FF_Instagram {
 
     private static $instance = null;
+    public $items = [];
 
     public $api_args = [
         'appId' => FF_INSTA['app_id'],
