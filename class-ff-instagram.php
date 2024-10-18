@@ -4,8 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) die();
 class FF_Instagram {
 
     private static $instance = null;
-    public $items = [];
-
+    
     public $api_args = [
         'appId' => FF_INSTA['app_id'],
         'appSecret' => FF_INSTA['app_secret'],
@@ -14,6 +13,7 @@ class FF_Instagram {
 
     public $limit = 12;
     public $access_token = '';
+    public $items = [];
 
     public static function getInstance() {
         if (self::$instance == null) {

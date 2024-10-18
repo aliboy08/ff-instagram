@@ -19,6 +19,6 @@ set "ssh_host=%install_name%@%install_name%.ssh.wpengine.net"
 
 echo Uploading to remote(%install_name%)...
 
-scp %zip_file% %ssh_host%:%remote_path%
+scp -O %zip_file% %ssh_host%:%remote_path%
 
 endlocal
