@@ -26,7 +26,7 @@ if( $action == 'refresh-feed' ) {
         pre_debug('ERROR: '. $error);
     }
     else {
-        wp_redirect( $refresh_url );
+        // wp_redirect( $refresh_url );
     }
 }
 

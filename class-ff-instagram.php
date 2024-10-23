@@ -4,7 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) die();
 class FF_Instagram {
 
     private static $instance = null;
-    
+    public $items = [];
+
     public $api_args = [
         'appId' => FF_INSTA['app_id'],
         'appSecret' => FF_INSTA['app_secret'],
@@ -13,7 +14,6 @@ class FF_Instagram {
 
     public $limit = 12;
     public $access_token = '';
-    public $items = [];
 
     public static function getInstance() {
         if (self::$instance == null) {
@@ -31,7 +31,9 @@ class FF_Instagram {
             $this->setup_cron();
         });
 
-        add_action('admin_menu', [$this, 'admin_menu']);
+        add_action('plugins_loaded', function(){
+            add_action('admin_menu', [$this, 'admin_menu']);
+        });
 
         $this->items = get_option('ff_instagram_items');
         if( !$this->items ) $this->items = [];
@@ -51,7 +53,7 @@ class FF_Instagram {
     public function refresh_feed(){
         
         $this->instagram_feed = $this->fetch_data();
-
+        
         if( isset( $this->instagram_feed->error ) ) {
         	return $this->instagram_feed->error->message;
         }
@@ -66,26 +68,24 @@ class FF_Instagram {
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/image.php');
         
-        $is_empty = !$this->items;
-        $has_changes = false;
+        $updated_items = [];
 
-        $i = 0;
-        foreach( $this->instagram_feed->data as $item ) { $i++;
+        foreach( $this->instagram_feed->data as $item ) {
+
+            $existing_item = $this->get_arr_item($this->items, 'id', $item->id);
+            if( $existing_item ) {
+                $updated_items[] = $existing_item;
+                continue;
+            }
             
-            if( $i > $this->limit ) break;
-
-            if( $this->item_exists( $item->id ) ) continue; // already exists, skip
-
             // new item
-            
             $image_url = ( $item->media_type === 'VIDEO' ) ? $item->thumbnail_url : $item->media_url;
         
-            $image_id = media_sideload_image( $image_url, 0, null, 'id' );
-
+            $image_id = media_sideload_image($image_url, 0, null, 'id');
             if( !$image_id ) continue;
 
             // image upload success
-
+            
             // save data to attachment post meta
             $meta = [
                 'link' => $item->permalink,
@@ -99,41 +99,34 @@ class FF_Instagram {
                 update_post_meta( $image_id, $key, $value );
             }
 
-            $item_data = [
+            $updated_items[] = [
                 'id' => $item->id,
                 'image_id' => $image_id,
             ];
-
-            if( $is_empty ) {
-                $this->items[] = $item_data;
-            }
-            else {
-                // remove old item
-                $this->delete_last_item();
-                // add new item on first index
-                array_unshift($this->items, $item_data);
-            }
-            
-            $has_changes = true;
-            
         }
-
-        if( $has_changes ) {
-            update_option('ff_instagram_items', $this->items, false);
-        }
-
-    }
-    
-    public function item_exists( $id ) {
-
-        if( !$this->items ) return false;
         
+        $this->delete_old_items($updated_items);
+        
+        if( count($updated_items) ) {
+            update_option('ff_instagram_items', $updated_items, false);
+        }
+    }
+
+    function delete_old_items($updated_items){
         foreach( $this->items as $item ) {
-            if( $item['id'] == $id ) return true;
+            $remove_item = $this->get_arr_item($updated_items, 'image_id', $item['image_id']);
+            if( !$remove_item ) {
+                $this->delete_item($item['image_id']);
+            }
         }
-        
-        return false;
     }
+
+    public function get_arr_item($arr, $key, $key_value){
+        foreach( $arr as $item ) {
+            if( $item[$key] == $key_value ) return $item;
+        }
+        return false;
+    } 
     
     public function delete_item( $post_id ) {
         // delete image
@@ -161,7 +154,7 @@ class FF_Instagram {
         if( $num ) {
             return $num;
         }
-        return 15;
+        return 12;
     }
 
     public static function get_items( $options = [] ){
