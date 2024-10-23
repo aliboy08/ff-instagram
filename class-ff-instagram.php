@@ -202,13 +202,6 @@ class FF_Instagram {
         update_option('ff_instagram_items', [], false);
     }
 
-    public function delete_last_item(){
-        $last_index = count($this->items);
-        if( $last_index < $this->limit ) return;
-        $last_item = $this->items[$last_index-1];
-        wp_delete_attachment( $last_item['image_id'], true );
-    }
-
     public function setup_cron(){
         if ( ! wp_next_scheduled( 'ff_instagram_token_refresh' ) ) {
             wp_schedule_event( time(), 'weekly', 'ff_instagram_token_refresh' );
