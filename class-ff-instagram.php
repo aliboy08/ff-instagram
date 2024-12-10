@@ -43,7 +43,7 @@ class FF_Instagram {
     public function fetch_data(){
         if( !$this->access_token ) return false;
         include_once 'InstagramBasicDisplay.php';
-        $instagram = new EspressoDev\InstagramBasicDisplay\InstagramBasicDisplay( $this->api_args );
+        $instagram = new FF\InstagramBasicDisplay( $this->api_args );
         $instagram->setAccessToken( $this->access_token );
         $instagram_feed = $instagram->getUserMedia( 'me', $this->limit );
         return $instagram_feed;
@@ -187,7 +187,7 @@ class FF_Instagram {
     public function refresh_token(){
         if( !$this->access_token ) return;
         include_once 'InstagramBasicDisplay.php';
-        $instagram = new EspressoDev\InstagramBasicDisplay\InstagramBasicDisplay( $this->api_args );
+        $instagram = new FF\InstagramBasicDisplay( $this->api_args );
         $token_refreshed = $instagram->refreshToken( $this->access_token, true );
         if( $token_refreshed ) {
             update_option( 'ff_instagram_refreshed_access_token', $token_refreshed );

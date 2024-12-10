@@ -1,5 +1,5 @@
 <?php
-namespace EspressoDev\InstagramBasicDisplay;
+namespace FF;
 
 if ( ! defined( 'ABSPATH' ) ) die();
 
@@ -8,6 +8,8 @@ class InstagramBasicDisplay
     const API_URL = 'https://graph.instagram.com/';
 
     const API_OAUTH_URL = 'https://api.instagram.com/oauth/authorize';
+
+    const API_OAUTH_URL_V2 = 'https://instagram.com/oauth/authorize';
 
     const API_OAUTH_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
     
@@ -23,7 +25,7 @@ class InstagramBasicDisplay
 
     private $_accesstoken;
 
-    private $_scopes = ['user_profile', 'user_media'];
+    private $_scopes = ['user_profile', 'user_media', 'instagram_business_basic'];
 
     private $_userFields = 'account_type, id, media_count, username';
 
@@ -61,6 +63,17 @@ class InstagramBasicDisplay
     {
         if (is_array($scopes) && count(array_intersect($scopes, $this->_scopes)) === count($scopes)) {
             return self::API_OAUTH_URL . '?client_id=' . $this->getAppId() . '&redirect_uri=' . urlencode($this->getRedirectUri()) . '&scope=' . implode(',',
+                $scopes) . '&response_type=code' . ($state != '' ? '&state=' . $state : '');
+        }
+
+        throw new InstagramBasicDisplayException("Error: getLoginUrl() - The parameter isn't an array or invalid scope permissions used.");
+    }
+
+    public function get_login_url_v2($scopes = ['instagram_business_basic'], $state = '')
+    {
+        //https://instagram.com/oauth/authorize?client_id=${instaAppId}&redirect_uri=${instagramRedirectUrl}&scope=instagram_business_basic&response_type=code
+        if (is_array($scopes) && count(array_intersect($scopes, $this->_scopes)) === count($scopes)) {
+            return self::API_OAUTH_URL_V2 . '?client_id=' . $this->getAppId() . '&redirect_uri=' . urlencode($this->getRedirectUri()) . '&scope=' . implode(',',
                 $scopes) . '&response_type=code' . ($state != '' ? '&state=' . $state : '');
         }
 
