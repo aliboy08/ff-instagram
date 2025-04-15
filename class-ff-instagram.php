@@ -203,10 +203,10 @@ class FF_Instagram {
     }
 
     public function setup_cron(){
-        if ( ! wp_next_scheduled( 'ff_instagram_token_refresh' ) ) {
-            wp_schedule_event( time(), 'weekly', 'ff_instagram_token_refresh' );
-        }
-        add_action( 'ff_instagram_token_refresh', [ $this, 'refresh_token' ] );
+        // if ( ! wp_next_scheduled( 'ff_instagram_token_refresh' ) ) {
+        //     wp_schedule_event( time(), 'weekly', 'ff_instagram_token_refresh' );
+        // }
+        // add_action( 'ff_instagram_token_refresh', [ $this, 'refresh_token' ] );
 
         if ( ! wp_next_scheduled( 'ff_instagram_feed_refresh' ) ) {
             wp_schedule_event( time(), 'twicedaily', 'ff_instagram_feed_refresh' );
